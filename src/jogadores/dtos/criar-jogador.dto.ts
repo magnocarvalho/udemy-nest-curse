@@ -6,7 +6,7 @@ import { IsEmail, IsString, IsNotEmpty, MinLength, Matches, IsMobilePhone } from
 export class CriarJogadorDto {
 	@ApiProperty({
 		description: "Has to match a regular expression: /^\\+[1-9]\\d{1,14}$/",
-		example: "+123123123123",
+		example: "+5511912345678",
 	})
 	@IsString()
 	@IsNotEmpty()
@@ -14,9 +14,15 @@ export class CriarJogadorDto {
 	@IsMobilePhone("pt-BR")
 	readonly telefoneCelular: string;
 	@IsEmail()
+	@IsNotEmpty()
+	@ApiProperty({
+		description: "Has to be a valid email address",
+		example: "email@email.com",
+	})
 	readonly email: string;
 	@IsString()
 	@IsNotEmpty()
 	@MinLength(3)
+	@ApiProperty({ description: "Has to be at least 3 characters long", example: "John" })
 	readonly nome: string;
 }
