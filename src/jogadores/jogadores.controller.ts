@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CriarJogadorDto } from "./dtos/criar-jogador.dto";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JogadoresService } from "./jogadores.service";
 import { Jogador } from "./interfaces/jogador.interface";
+import { JogadoresValidacaoPipe } from "./pipes/jogadoresValidacao.pipe";
 /**
  *
  *
@@ -22,31 +23,60 @@ export class JogadoresController {
 	 * @memberof JogadoresController
 	 * @author Magneira
 	 * @argument {CriarJogadorDto} criarJogadorDto
-	 * @return {Promise<CriarJogadorDto>}
+	 * @return {*} {Promise<CriarJogadorDto>}
 	 */
 	@Post()
+	@UsePipes(ValidationPipe)
 	@ApiResponse({ status: 201, description: "The record is successfully created", type: CriarJogadorDto })
-	@ApiResponse({ status: 403, description: "Forbidden" })
-	async criarAtualizarJogador(@Body() criarJogadorDto: CriarJogadorDto): Promise<CriarJogadorDto> {
-		await this.jogadoresService.criarAtualizarJogador(criarJogadorDto);
-		return criarJogadorDto;
+	async criarJogador(@Body() criarJogadorDto: CriarJogadorDto): Promise<CriarJogadorDto> {
+		return await this.jogadoresService.newJogador(criarJogadorDto);
 	}
 
+	@Put("/:_id")
+	@UsePipes(ValidationPipe)
+	@ApiResponse({ status: 201, description: "The record is successfully created", type: CriarJogadorDto })
+	async atualizarJogador(@Body() criarJogadorDto: CriarJogadorDto, @Param("_id", JogadoresValidacaoPipe) _id: string): Promise<CriarJogadorDto> {
+		return await this.jogadoresService.updateJogador(_id, criarJogadorDto);
+	}
+	/**
+	 *
+	 *
+	 * @return {*}  {Promise<Jogador[]>}
+	 * @memberof JogadoresController
+	 */
 	@Get("/all")
-	// @ApiResponse({ description: "Get all jogadores", type: Promise<Jogador[]> })
 	async getAllJogadores(): Promise<Jogador[]> {
 		return this.jogadoresService.getJogadores();
 	}
-
+	/**
+	 *
+	 *
+	 * @param {string} email
+	 * @return {*}  {Promise<Jogador>}
+	 * @memberof JogadoresController
+	 */
 	@Get()
-	// @ApiResponse({ description: "Get all jogadores", type: Promise<Jogador | Jogador[]> })
-	async getJogadoreByEmail(@Query("email") email: string): Promise<Jogador | Jogador[]> {
-		if (email) return this.jogadoresService.getJogadoreByEmail(email);
-		else return this.jogadoresService.getJogadores();
+	async getJogadoreByEmail(@Query("email", JogadoresValidacaoPipe) email: string): Promise<Jogador> {
+		return this.jogadoresService.getJogadoreByEmail(email);
 	}
-
+	/**
+	 *
+	 * @param _id
+	 * @returns {*}  {Promise<Jogador>}
+	 */
+	@Get("/:_id")
+	async getJogadoreByID(@Param("_id", JogadoresValidacaoPipe) _id: string): Promise<Jogador> {
+		return this.jogadoresService.getJogadorByID(_id);
+	}
+	/**
+	 *
+	 *
+	 * @param {string} email
+	 * @return {*}  {Promise<void>}
+	 * @memberof JogadoresController
+	 */
 	@Delete()
-	async deleteJogador(@Query("email") email: string): Promise<void> {
+	async deleteJogador(@Query("email", JogadoresValidacaoPipe) email: string): Promise<any> {
 		await this.jogadoresService.deleteJogador(email);
 	}
 }
