@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UsePipes, ValidationPipe } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CategoriasService } from "./categorias.service";
-import { AtualizarCategoriaDto } from "./dto/atualizarCategoria.dto";
-import { CriaCategoriaDto } from "./dto/criaCategoria.dto";
+import { AtualizarCategoriaDto } from "./dtos/atualizarCategoria.dto";
+import { CriaCategoriaDto } from "./dtos/criaCategoria.dto";
 import { Categoria } from "./interfaces/categoria.interface";
-@Controller("categorias")
+@Controller("api/v1/categorias")
 @ApiTags("Categorias")
 export class CategoriasController {
 	constructor(private readonly categoriaService: CategoriasService) {}

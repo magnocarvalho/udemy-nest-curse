@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { JogadoresService } from "src/jogadores/jogadores.service";
-import { AtualizarCategoriaDto } from "./dto/atualizarCategoria.dto";
-import { CriaCategoriaDto } from "./dto/criaCategoria.dto";
+import { AtualizarCategoriaDto } from "./dtos/atualizarCategoria.dto";
+import { CriaCategoriaDto } from "./dtos/criaCategoria.dto";
 import { Categoria } from "./interfaces/categoria.interface";
 
 @Injectable()
@@ -69,5 +69,25 @@ export class CategoriasService {
 
 		categoriaEncontrada.jogadores.push(idJogador);
 		await this.categoriaModel.findOneAndUpdate({ categoria }, { $set: categoriaEncontrada }).exec();
+	}
+
+	async consultarCategoriaDoJogador(idJogador: any): Promise<Categoria> {
+		/*
+        Desafio
+        Escopo da exceção realocado para o próprio Categorias Service
+        Verificar se o jogador informado já se encontra cadastrado
+        */
+
+		//await this.jogadoresService.consultarJogadorPeloId(idJogador)
+
+		const jogadores = await this.jogadoresService.getJogadores();
+
+		const jogadorFilter = jogadores.filter((jogador) => jogador._id == idJogador);
+
+		if (jogadorFilter.length == 0) {
+			throw new BadRequestException(`O id ${idJogador} não é um jogador!`);
+		}
+
+		return await this.categoriaModel.findOne().where("jogadores").in(idJogador).exec();
 	}
 }
