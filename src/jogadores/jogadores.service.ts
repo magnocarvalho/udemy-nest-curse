@@ -1,35 +1,15 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { CriarJogadorDto } from "./dtos/criar-jogador.dto";
+import { CriarJogadorDto } from "./dtos/criarJogador.dto";
 import { Jogador } from "./interfaces/jogador.interface";
-import { v4 as uuidv4 } from "uuid";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { AtualizarJogadorDto } from "./dtos/atualizarJogador.dto";
 
 @Injectable()
 export class JogadoresService {
 	private readonly logger = new Logger(JogadoresService.name);
 
 	constructor(@InjectModel("Jogador") private readonly jogadorModel: Model<Jogador>) {}
-
-	// async criarJogador(criarJogadorDto: CriarJogadorDto): Promise<void> {
-	// 	this.logger.log(criarJogadorDto);
-	// 	// const acharJogador = this.jogadores.find((jogador) => jogador.email === criarJogadorDto.email);
-	// 	const acharJogador = await this.jogadorModel.findOne({ email: criarJogadorDto.email }).exec();
-	// 	if (acharJogador) {
-	// 		this.logger.log("Jogador ja existe");
-	// 		this.updateJogador(criarJogadorDto);
-	// 	} else await this.criarJogador(criarJogadorDto);
-	// }
-
-	// async atualizarJogador(criarJogadorDto: CriarJogadorDto): Promise<void> {
-	// 	this.logger.log(criarJogadorDto);
-	// 	// const acharJogador = this.jogadores.find((jogador) => jogador.email === criarJogadorDto.email);
-	// 	const acharJogador = await this.jogadorModel.findOne({ email: criarJogadorDto.email }).exec();
-	// 	if (acharJogador) {
-	// 		this.logger.log("Jogador ja existe");
-	// 		this.atualizarJogador(criarJogadorDto);
-	// 	} else await this.criarJogador(criarJogadorDto);
-	// }
 
 	async getJogadores(): Promise<Jogador[]> {
 		// return this.jogadores;
@@ -65,7 +45,7 @@ export class JogadoresService {
 		return await jogadorNew.save();
 	}
 
-	async updateJogador(_id: string, jogador: CriarJogadorDto): Promise<Jogador> {
+	async updateJogador(_id: string, jogador: AtualizarJogadorDto): Promise<Jogador> {
 		// const index = this.jogadores.findIndex((j) => j.email === jogador.email);
 		// this.jogadores[index] = { ...this.jogadores[index], ...jogador };
 		return await this.jogadorModel.findByIdAndUpdate(_id, { ...jogador });

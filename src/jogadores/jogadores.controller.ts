@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from "@nestjs/common";
-import { CriarJogadorDto } from "./dtos/criar-jogador.dto";
+import { CriarJogadorDto } from "./dtos/criarJogador.dto";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JogadoresService } from "./jogadores.service";
 import { Jogador } from "./interfaces/jogador.interface";
 import { JogadoresValidacaoPipe } from "./pipes/jogadoresValidacao.pipe";
+import { AtualizarJogadorDto } from "./dtos/atualizarJogador.dto";
 /**
  *
  *
@@ -34,9 +35,9 @@ export class JogadoresController {
 
 	@Put("/:_id")
 	@UsePipes(ValidationPipe)
-	@ApiResponse({ status: 201, description: "The record is successfully created", type: CriarJogadorDto })
-	async atualizarJogador(@Body() criarJogadorDto: CriarJogadorDto, @Param("_id", JogadoresValidacaoPipe) _id: string): Promise<CriarJogadorDto> {
-		return await this.jogadoresService.updateJogador(_id, criarJogadorDto);
+	@ApiResponse({ status: 201, description: "The record is successfully update", type: AtualizarJogadorDto })
+	async atualizarJogador(@Body() atualizarJogadorDto: AtualizarJogadorDto, @Param("_id", JogadoresValidacaoPipe) _id: string): Promise<AtualizarJogadorDto> {
+		return await this.jogadoresService.updateJogador(_id, atualizarJogadorDto);
 	}
 	/**
 	 *
@@ -45,6 +46,7 @@ export class JogadoresController {
 	 * @memberof JogadoresController
 	 */
 	@Get("/all")
+	@ApiResponse({ status: 200, description: "Get all records", type: AtualizarJogadorDto })
 	async getAllJogadores(): Promise<Jogador[]> {
 		return this.jogadoresService.getJogadores();
 	}
