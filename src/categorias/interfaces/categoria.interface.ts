@@ -7,8 +7,14 @@ export interface Categoria extends Document {
 	eventos: Array<Evento>;
 	jogadores: Array<Jogador>;
 }
-
+/**
+ * eventos: ARRAY de OBJETOS
+ *
+ * @export
+ * @interface Evento
+ */
 export interface Evento {
+	// @IsString()
 	nome: string;
 	operacao: string;
 	valor: number;
